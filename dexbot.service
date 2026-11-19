@@ -1,0 +1,22 @@
+[Unit]
+Description=DEX Telegram bot (chi bao token theo chain)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/hatch/workspace/telegram-dex-bot
+# Proxy egress + CA bundle do runtime cap (khong copy secret vao unit)
+EnvironmentFile=/etc/environment
+ExecStart=/usr/bin/python3 /home/hatch/workspace/telegram-dex-bot/dexbot.py run
+Restart=always
+RestartSec=30
+StartLimitIntervalSec=600
+StartLimitBurst=5
+TimeoutStopSec=30
+KillMode=control-group
+# Khong redirect stdout/stderr vao bot.log: app da tu ghi log vao file
+# qua RotatingFileHandler, redirect se lam moi dong log xuat hien 2 lan.
+
+[Install]
+WantedBy=default.target
